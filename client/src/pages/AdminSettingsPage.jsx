@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import * as api from '../utils/api';
 
-function AdminSettingsPage({ user, onLogout }) {
+function AdminSettingsPage({ adminToken, onLogout }) {
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [videoAdValue, setVideoAdValue] = useState('0.05');
@@ -43,14 +43,14 @@ function AdminSettingsPage({ user, onLogout }) {
     }
   };
 
-  if (loading) return <AdminLayout user={user} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
+  if (loading) return <AdminLayout adminToken={adminToken} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
 
   const userEarnsPercent = 20;
   const userEarnsPerAd = (parseFloat(videoAdValue) * (userEarnsPercent / 100)).toFixed(4);
   const youEarnPerAd = (parseFloat(videoAdValue) * ((100 - userEarnsPercent) / 100)).toFixed(4);
 
   return (
-    <AdminLayout user={user} onLogout={onLogout}>
+    <AdminLayout adminToken={adminToken} onLogout={onLogout}>
       <div>
         <h1 style={{ marginBottom: '2rem' }}>Settings</h1>
 
@@ -121,24 +121,6 @@ function AdminSettingsPage({ user, onLogout }) {
           >
             {saving ? 'Saving...' : 'Save Settings'}
           </button>
-        </div>
-
-        {/* Additional Settings */}
-        <div className="card" style={{ marginTop: '2rem', maxWidth: '600px' }}>
-          <h2>Platform Information</h2>
-          <div style={{ display: 'grid', gap: '1rem' }}>
-            <div>
-              <label style={{ fontWeight: '600', color: '#1f2937', fontSize: '0.95rem' }}>Ad Networks to Implement</label>
-              <p style={{ color: '#666', margin: '0.5rem 0' }}>• Google AdSense (banner ads)</p>
-              <p style={{ color: '#666', margin: '0.5rem 0' }}>• Google Ad Manager (video ads)</p>
-              <p style={{ color: '#666', margin: '0.5rem 0' }}>• Admob (mobile ads)</p>
-            </div>
-            <div>
-              <label style={{ fontWeight: '600', color: '#1f2937', fontSize: '0.95rem' }}>Payment Integrations</label>
-              <p style={{ color: '#666', margin: '0.5rem 0' }}>✓ PayPal API configured</p>
-              <p style={{ color: '#666', margin: '0.5rem 0' }}>✓ Cash App ($Cashtag) ready</p>
-            </div>
-          </div>
         </div>
       </div>
     </AdminLayout>

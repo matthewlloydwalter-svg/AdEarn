@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import * as api from '../utils/api';
 
-function AdminUsersPage({ user, onLogout }) {
+function AdminUsersPage({ adminToken, onLogout }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -33,10 +33,10 @@ function AdminUsersPage({ user, onLogout }) {
     }
   };
 
-  if (loading) return <AdminLayout user={user} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
+  if (loading) return <AdminLayout adminToken={adminToken} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
 
   return (
-    <AdminLayout user={user} onLogout={onLogout}>
+    <AdminLayout adminToken={adminToken} onLogout={onLogout}>
       <div>
         <h1 style={{ marginBottom: '2rem' }}>Users</h1>
 

@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
 import * as api from '../utils/api';
 
-function AdminOverviewPage({ user, onLogout }) {
+function AdminOverviewPage({ adminToken, onLogout }) {
+  const navigate = useNavigate();
   const [overview, setOverview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [aiMessage, setAiMessage] = useState('');
   const [aiChat, setAiChat] = useState([
-    { role: 'assistant', content: 'Hi! I\'m your AI assistant. I can help you understand your platform metrics or answer questions about AdEarn. What would you like to know?' }
+    { role: 'assistant', content: 'Hi! I\'m your AI assistant. I can help you understand your AdEarn metrics or answer questions about your platform. What would you like to know?' }
   ]);
   const [showAI, setShowAI] = useState(false);
 
@@ -30,38 +32,36 @@ function AdminOverviewPage({ user, onLogout }) {
     e.preventDefault();
     if (!aiMessage.trim()) return;
 
-    // Add user message
     const newChat = [...aiChat, { role: 'user', content: aiMessage }];
     setAiChat(newChat);
     setAiMessage('');
 
-    // Simulate AI response (in production, call actual AI API)
     setTimeout(() => {
       let response = '';
       const msg = aiMessage.toLowerCase();
 
       if (msg.includes('revenue') || msg.includes('earnings')) {
-        response = `Your total earnings so far: $${parseFloat(overview.total_earnings).toFixed(2)}. You've paid out $${parseFloat(overview.total_paid_out).toFixed(2)} with $${parseFloat(overview.total_pending).toFixed(2)} pending.`;
+        response = `Your total earnings: $${parseFloat(overview?.total_earnings || 0).toFixed(2)}. Paid out: $${parseFloat(overview?.total_paid_out || 0).toFixed(2)}. Pending: $${parseFloat(overview?.total_pending || 0).toFixed(2)}.`;
       } else if (msg.includes('users')) {
-        response = `You currently have ${overview.total_users} active users on your platform.`;
+        response = `You have ${overview?.total_users || 0} active users on your AdEarn platform.`;
       } else if (msg.includes('grow') || msg.includes('increase')) {
-        response = 'To grow your user base: 1) Increase ad rates gradually 2) Promote your app on social media 3) Consider referral bonuses 4) Optimize user experience';
+        response = 'To grow AdEarn: 1) Increase ad rates gradually 2) Promote on social media 3) Add referral bonuses 4) Optimize user experience';
       } else if (msg.includes('payout')) {
-        response = `You have $${parseFloat(overview.total_pending).toFixed(2)} in pending payouts. Visit the Payouts section to approve or deny requests.`;
+        response = `You have $${parseFloat(overview?.total_pending || 0).toFixed(2)} in pending payouts. Visit Payouts section to approve or deny.`;
       } else {
-        response = 'I can help with: revenue stats, user count, growth strategies, payout status, or platform management. What would you like to know?';
+        response = 'I can help with: revenue stats, user count, growth strategies, payout status. What would you like to know?';
       }
 
       setAiChat((prev) => [...prev, { role: 'assistant', content: response }]);
     }, 500);
   };
 
-  if (loading) return <AdminLayout user={user} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
+  if (loading) return <AdminLayout adminToken={adminToken} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
 
   return (
-    <AdminLayout user={user} onLogout={onLogout}>
+    <AdminLayout adminToken={adminToken} onLogout={onLogout}>
       <div>
-        <h1 style={{ marginBottom: '2rem' }}>Admin Overview</h1>
+        <h1 style={{ marginBottom: '2rem' }}>Admin Overview - watchad2earn.com</h1>
 
         {/* Stats Cards */}
         <div className="card-grid">
@@ -111,7 +111,6 @@ function AdminOverviewPage({ user, onLogout }) {
               display: 'flex',
               flexDirection: 'column',
             }}>
-              {/* Chat Messages */}
               <div style={{
                 flex: 1,
                 overflowY: 'auto',
@@ -137,7 +136,6 @@ function AdminOverviewPage({ user, onLogout }) {
                 ))}
               </div>
 
-              {/* Input */}
               <form onSubmit={handleAISubmit} style={{ display: 'flex', gap: '0.5rem' }}>
                 <input
                   type="text"

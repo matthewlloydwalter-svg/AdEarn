@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import * as api from '../utils/api';
 
-function AdminPayoutsPage({ user, onLogout }) {
+function AdminPayoutsPage({ adminToken, onLogout }) {
   const [payouts, setPayouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('pending');
@@ -47,10 +47,10 @@ function AdminPayoutsPage({ user, onLogout }) {
     }
   };
 
-  if (loading) return <AdminLayout user={user} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
+  if (loading) return <AdminLayout adminToken={adminToken} onLogout={onLogout}><div className="loading">Loading...</div></AdminLayout>;
 
   return (
-    <AdminLayout user={user} onLogout={onLogout}>
+    <AdminLayout adminToken={adminToken} onLogout={onLogout}>
       <div>
         <h1 style={{ marginBottom: '2rem' }}>Payout Requests</h1>
 

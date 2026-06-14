@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function AdminLayout({ children, user, onLogout }) {
+function AdminLayout({ children, adminToken, onLogout }) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const ADMIN_PATH = '/admin/matthew1lloyd4walter8adearndaddy';
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', display: 'flex' }}>
@@ -21,12 +22,12 @@ function AdminLayout({ children, user, onLogout }) {
         }}
       >
         <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-          <h3 style={{ margin: 0 }}>⚙️ {sidebarOpen ? 'Admin' : ''}</h3>
+          <h3 style={{ margin: 0 }}>💰 {sidebarOpen ? 'AdEarn' : 'AE'}</h3>
         </div>
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
           <button
-            onClick={() => navigate('/admin')}
+            onClick={() => navigate(ADMIN_PATH)}
             style={{
               background: 'none',
               border: 'none',
@@ -44,7 +45,7 @@ function AdminLayout({ children, user, onLogout }) {
             {sidebarOpen ? 'Overview' : '📊'}
           </button>
           <button
-            onClick={() => navigate('/admin/payouts')}
+            onClick={() => navigate(`${ADMIN_PATH}/payouts`)}
             style={{
               background: 'none',
               border: 'none',
@@ -59,10 +60,10 @@ function AdminLayout({ children, user, onLogout }) {
             onMouseEnter={(e) => (e.target.style.background = 'rgba(255,255,255,0.1)')}
             onMouseLeave={(e) => (e.target.style.background = 'none')}
           >
-            {sidebarOpen ? 'Payouts' : '💰'}
+            {sidebarOpen ? 'Payouts' : '💵'}
           </button>
           <button
-            onClick={() => navigate('/admin/users')}
+            onClick={() => navigate(`${ADMIN_PATH}/users`)}
             style={{
               background: 'none',
               border: 'none',
@@ -80,7 +81,7 @@ function AdminLayout({ children, user, onLogout }) {
             {sidebarOpen ? 'Users' : '👥'}
           </button>
           <button
-            onClick={() => navigate('/admin/settings')}
+            onClick={() => navigate(`${ADMIN_PATH}/settings`)}
             style={{
               background: 'none',
               border: 'none',
@@ -134,7 +135,7 @@ function AdminLayout({ children, user, onLogout }) {
             ☰
           </button>
           <h2 style={{ margin: 0, color: '#1f2937' }}>💰 AdEarn Admin</h2>
-          <div style={{ color: '#666' }}>{user?.email}</div>
+          <div style={{ color: '#666' }}>watchad2earn.com/admin</div>
         </header>
 
         {/* Content */}

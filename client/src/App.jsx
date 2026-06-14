@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import * as api from './utils/api';
 
-// Pages
+// User Pages
 import LandingPage from './pages/LandingPage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
@@ -12,13 +12,17 @@ import HistoryPage from './pages/HistoryPage';
 import CashOutPage from './pages/CashOutPage';
 
 // Admin Pages
+import AdminLoginPage from './pages/AdminLoginPage';
 import AdminOverviewPage from './pages/AdminOverviewPage';
 import AdminPayoutsPage from './pages/AdminPayoutsPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminSettingsPage from './pages/AdminSettingsPage';
 
+const ADMIN_PATH = '/admin/matthew1lloyd4walter8adearndaddy';
+
 function App() {
   const [user, setUser] = useState(null);
+  const [adminToken, setAdminToken] = useState(localStorage.getItem('adminToken'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,6 +51,16 @@ function App() {
     setUser(null);
   };
 
+  const handleAdminLogin = (token) => {
+    localStorage.setItem('adminToken', token);
+    setAdminToken(token);
+  };
+
+  const handleAdminLogout = () => {
+    localStorage.removeItem('adminToken');
+    setAdminToken(null);
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -66,10 +80,46 @@ function App() {
         <Route path="/cashout" element={user && user.role !== 'admin' ? <CashOutPage user={user} /> : <Navigate to="/" />} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={user && user.role === 'admin' ? <AdminOverviewPage user={user} onLogout={handleLogout} /> : <Navigate to="/" />} />
-        <Route path="/admin/payouts" element={user && user.role === 'admin' ? <AdminPayoutsPage user={user} onLogout={handleLogout} /> : <Navigate to="/" />} />
-        <Route path="/admin/users" element={user && user.role === 'admin' ? <AdminUsersPage user={user} onLogout={handleLogout} /> : <Navigate to="/" />} />
-        <Route path="/admin/settings" element={user && user.role === 'admin' ? <AdminSettingsPage user={user} onLogout={handleLogout} /> : <Navigate to="/" />} />
+        <Route
+          path={ADMIN_PATH}
+          element={
+            adminToken ? (
+              <AdminOverviewPage adminToken={adminToken} onLogout={handleAdminLogout} />
+            ) : (
+              <AdminLoginPage onLogin={handleAdminLogin} />
+            )
+          }
+        />
+        <Route
+          path={`${ADMIN_PATH}/payouts`}
+          element={
+            adminToken ? (
+              <AdminPayoutsPage adminToken={adminToken} onLogout={handleAdminLogout} />
+            ) : (
+              <Navigate to={ADMIN_PATH} />
+            )
+          }
+        />
+        <Route
+          path={`${ADMIN_PATH}/users`}
+          element={
+            adminToken ? (
+              <AdminUsersPage adminToken={adminToken} onLogout={handleAdminLogout} />
+            ) : (
+              <Navigate to={ADMIN_PATH} />
+            )
+          }
+        />
+        <Route
+          path={`${ADMIN_PATH}/settings`}
+          element={
+            adminToken ? (
+              <AdminSettingsPage adminToken={adminToken} onLogout={handleAdminLogout} />
+            ) : (
+              <Navigate to={ADMIN_PATH} />
+            )
+          }
+        />
       </Routes>
     </Router>
   );
